@@ -1,12 +1,15 @@
 package com.adrieljosias.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity //Entidade do JPA para mapeamento obj relacional
 public class Categoria implements Serializable {
@@ -16,6 +19,10 @@ public class Categoria implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //Definindo a geração automatica dos id
 	private Integer id;
 	private String nome;
+	
+	@ManyToMany(mappedBy = "categorias")//mapeamento do outro lado 
+	private List<Produto> produtos = new ArrayList<>();
+	
 	
 	public Categoria() {
 	}
@@ -45,7 +52,14 @@ public class Categoria implements Serializable {
 		this.nome = nome;
 	}
 
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
 
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -63,6 +77,7 @@ public class Categoria implements Serializable {
 		Categoria other = (Categoria) obj;
 		return Objects.equals(id, other.id);
 	}
+
 	
 	
 	
