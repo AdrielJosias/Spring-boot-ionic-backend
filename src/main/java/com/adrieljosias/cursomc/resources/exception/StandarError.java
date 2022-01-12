@@ -1,4 +1,3 @@
-//
 package com.adrieljosias.cursomc.resources.exception;
 
 import java.io.Serializable;

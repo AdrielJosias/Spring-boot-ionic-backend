@@ -31,7 +31,7 @@ public class Produto implements Serializable { //Implementação do Serializable
 		joinColumns = @JoinColumn(name = "Produto_id"), //chave estrangeira, nome do campo produto
 		inverseJoinColumns = @JoinColumn(name = "Categoria_id") //chave estrangeira, nome do campo categoria
 	)
-	private List<Categoria> categorias = new ArrayList<>();
+	private List<Categoria> categorias = new ArrayList<>();//atributo para mapeação na classe Categoria
 	
 	public Produto () {
 	}
