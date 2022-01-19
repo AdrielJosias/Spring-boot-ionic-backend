@@ -16,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity //Entidade do JPA para mapeamento obj relacional
@@ -29,7 +28,7 @@ public class Produto implements Serializable { //Implementação do Serializable
 	private String nome;
 	private Double preco;
 	
-	@JsonBackReference //é a parte posterior da referência, será omitido na busca
+	@JsonIgnore //é a parte posterior da referência, será omitido na busca
 	@ManyToMany //Criação de tabela para ligação entre produto e categoria
 	@JoinTable(name = "PRODUTO_CATEGORIA", //nome da tabela de ligação
 		joinColumns = @JoinColumn(name = "Produto_id"), //chave estrangeira, nome do campo produto

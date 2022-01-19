@@ -16,8 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.adrieljosias.cursomc.domain.enums.TipoCliente;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Cliente implements Serializable {
@@ -32,7 +31,7 @@ public class Cliente implements Serializable {
 	//Armazenar um numero inteiro ao inves do "TipoCliente"	internamente, porem para o mundo externo vai ser um dado TipoCliente(private TipoCliente tipo;)
 	private Integer tipo;
 	
-		@JsonManagedReference//endpoint serializa os endereços
+		//@JsonManagedReference//endpoint serializa os endereços
 		@OneToMany(mappedBy = "cliente") //um pra muitos
 		private List<Endereco> enderecos = new ArrayList<>();
 	
@@ -40,7 +39,7 @@ public class Cliente implements Serializable {
 		@CollectionTable(name = "TELEFONE")
 		private Set<String> telefones = new HashSet<>();//coleção de strings associada ao clinte, Set nao aceita repetição
 		
-		@JsonBackReference
+		@JsonIgnore
 		@OneToMany(mappedBy ="cliente")
 		private List<Pedido> pedidos = new ArrayList<>();
 		

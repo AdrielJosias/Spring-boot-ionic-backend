@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity //Entidade do JPA para mapeamento obj relacional
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -22,7 +20,7 @@ public class Categoria implements Serializable {
 	private Integer id;
 	private String nome;
 	
-	@JsonManagedReference //é a parte direta da referência, aquela que busca os obj normalmente
+	//@JsonManagedReference //é a parte direta da referência, aquela que busca os obj normalmente
 	@ManyToMany(mappedBy = "categorias")//atributo que mapeou o outro lado (Produto)  
 	private List<Produto> produtos = new ArrayList<>();
 	
