@@ -23,4 +23,10 @@ public class CategoriaService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 	}
 	
+	//metodo de incerir repositorio da nova categoria
+	public Categoria insert(Categoria obj) { 
+		obj.setId(null); //reforça que será incerido um obj novo
+		return repo.save(obj); 
+	}
+	
 }
