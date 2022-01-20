@@ -19,8 +19,8 @@ public class ClienteResource {
 	private ClienteService service;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)//recebe tambem o id
-	public ResponseEntity<?> find(@PathVariable Integer id) { //PathVariable associa o id da url com a variavel
-		Cliente obj = service.buscar(id);					//RespoceEntity capsula varias informaçoes http para rest
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) { //PathVariable associa o id da url com a variavel
+		Cliente obj = service.find(id);					//RespoceEntity capsula varias informaçoes http para rest
 		return ResponseEntity.ok().body(obj);
 	}	
 	

@@ -17,7 +17,7 @@ public class CategoriaService {
 	private CategoriaRepository repo;
 	
 	//operacao que busca uma categoria por codigo
-	public Categoria buscar(Integer id) {
+	public Categoria find(Integer id) {
 		 Optional<Categoria> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
@@ -27,6 +27,12 @@ public class CategoriaService {
 	public Categoria insert(Categoria obj) { 
 		obj.setId(null); //reforça que será incerido um obj novo
 		return repo.save(obj); 
-	}
+		}
+		
+		//metodo de atualizar o repositorio
+		public Categoria update(Categoria obj) {
+			find(obj.getId());//Verifica se o ID é existente, ou se deverá mandar uma eceção
+			return repo.save(obj);
+		}
 	
 }

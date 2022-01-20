@@ -23,8 +23,8 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)//recebe tambem o id
-	public ResponseEntity<?> find(@PathVariable Integer id) { //PathVariable associa o id da url com a variavel
-		Categoria obj = service.buscar(id);					//RespoceEntity capsula varias informaçoes http para rest
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) { //PathVariable associa o id da url com a variavel
+		Categoria obj = service.find(id);					//RespoceEntity capsula varias informaçoes http para rest
 		return ResponseEntity.ok().body(obj);
 	}	
 	
@@ -36,4 +36,11 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();//gerar o codigo 201 automaticamente, atribuindo o uri 
 	}
 	
+	@RequestMapping(value="/{id}", method = RequestMethod.PUT)//Atualizar algo 
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id ) { // é uma mistura do GET com o POST
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();//retorna vazio
+		
+	}
 }
