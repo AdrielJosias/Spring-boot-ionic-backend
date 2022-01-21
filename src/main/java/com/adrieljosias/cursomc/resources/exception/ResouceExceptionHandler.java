@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.adrieljosias.cursomc.services.exceptions.DataIntegrityException;
 import com.adrieljosias.cursomc.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice //Metódos padroes do controlleradvices
@@ -19,5 +20,13 @@ public class ResouceExceptionHandler {
 		//Instanciar classe StandarError
 		StandarError err = new StandarError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+	}
+	//criando codigo de erro personalizado, stander error
+	@ExceptionHandler(DataIntegrityException.class)//Tratador de excessoes
+	public ResponseEntity<StandarError> dataIntegrity(DataIntegrityException e, HttpServletRequest request) {
+		
+		//Instanciar classe StandarError
+		StandarError err = new StandarError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 }
