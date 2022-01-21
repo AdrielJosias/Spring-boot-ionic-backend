@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -59,4 +61,16 @@ public class CategoriaResource {
 		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());//Converter a lista para uma lista DTO, criando um construtor na classe DTO
 				return ResponseEntity.ok().body(listDto);
 	}	
+	
+	//Paginação
+	@RequestMapping(value= "/page", method=RequestMethod.GET)//pagina um id
+	public ResponseEntity<Page<CategoriaDTO>> findPage(
+			@RequestParam(value="page", defaultValue="0") Integer page, //se nao informar o parameto da pagina automaticamente ele vai para pagina 0
+			@RequestParam(value="linesPerPage", defaultValue="24")Integer linesPerPage, //geralmente 24 linhas por ser multiplo de 1, 2, 3 e 4
+			@RequestParam(value="orderBy", defaultValue="nome")String orderBy, //se nao informado, buscar por nome
+			@RequestParam(value="direction", defaultValue="ASC")String direction) { //ASC ascendente ou DESC descendente 
+		Page<Categoria> list = service.findPage(page, linesPerPage, orderBy, direction);//busca as paginas				
+		Page<CategoriaDTO> listDto = list.map(obj -> new CategoriaDTO(obj));//Converter para DTO
+				return ResponseEntity.ok().body(listDto);
+	}
 }
