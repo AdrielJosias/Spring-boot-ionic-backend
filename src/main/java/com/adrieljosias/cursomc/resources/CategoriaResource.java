@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -34,15 +36,16 @@ public class CategoriaResource {
 	}	
 	
 	@RequestMapping(method=RequestMethod.POST)//Incerir nova categoria no banco de dados
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj) { //resposta http vazia
-		obj = service.insert(obj); //chamar serviço que inclui a nova categoria no banco de dados
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) { //resposta http vazia
+		Categoria obj = service.fromDTO(objDto); //converter objDTO para um obj Entity
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(obj.getId()).toUri();//pega a URI no novo recurso que foi incerido e inclui o ID da nova categoria incerida
 		return ResponseEntity.created(uri).build();//gerar o codigo 201 automaticamente, atribuindo o uri 
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT)//Atualizar algo 
-	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id ) { // é uma mistura do GET com o POST
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id ) { // é uma mistura do GET com o POST
+		Categoria obj = service.fromDTO(objDto); //converter objDTO para um obj Entity
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();//retorna vazio
