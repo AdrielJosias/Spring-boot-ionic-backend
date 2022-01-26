@@ -33,14 +33,14 @@ public class ResouceExceptionHandler {
 	}
 	
 	
-	//criando codigo de erro personalizado, stander error
+	 //criando codigo de erro personalizado, validationerror
 		@ExceptionHandler(MethodArgumentNotValidException.class)//Tratador de excessoes
 		public ResponseEntity<StandarError> Validation(MethodArgumentNotValidException e, HttpServletRequest request) {
 			
-			//Instanciar classe ValidationError
+			//Instanciar classe ValidationError, personalizando para somente aparecer o nome do erro e a mensagem 
 			ValidationError err = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação", System.currentTimeMillis());
-			for (FieldError x : e.getBindingResult().getFieldErrors()) {
-				err.addError(x.getField(), x.getDefaultMessage());
+			for (FieldError x : e.getBindingResult().getFieldErrors()) { //percorre a lista de erro dessa exceção
+				err.addError(x.getField(), x.getDefaultMessage()); //pega o nome do campo e sua mensagem
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 		}

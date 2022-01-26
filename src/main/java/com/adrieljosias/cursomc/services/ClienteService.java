@@ -1,26 +1,77 @@
 package com.adrieljosias.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.adrieljosias.cursomc.domain.Cliente;
+import com.adrieljosias.cursomc.dto.ClienteDTO;
 import com.adrieljosias.cursomc.repositories.ClienteRepository;
+import com.adrieljosias.cursomc.services.exceptions.DataIntegrityException;
 import com.adrieljosias.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
 
-	//essa classe esta acessando a classe CategoriaResource que é Objeto acessa aos dados
+	//essa classe esta acessando a classe ClienteResource que é Objeto acessa aos dados
 	@Autowired   //Intancia automaticamente
 	private ClienteRepository repo;
 	
-	//operacao que busca uma categoria por codigo
+	//operacao que busca uma Cliente por codigo
 	public Cliente find(Integer id) {
 		 Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 	
+	//metodo de incerir repositorio da nova Cliente
+		public Cliente insert(Cliente obj) { 
+			obj.setId(null); //reforça que será incerido um obj novo
+			return repo.save(obj); 
+			}
+			
+			//metodo de atualizar o repositorio
+			public Cliente update(Cliente obj) {
+				Cliente newObj = find(obj.getId());//Instancia um Cliente apartir do banco de dados, Verifica se o ID é existente, ou se deverá mandar uma eceção
+				updateData(newObj, obj);//metodo auxiliar para atualizar o newobj com base no obj que veio com argumento
+				return repo.save(newObj);//salva o newobj atuaizado
+			}
+		
+			//Deleta algo
+			public void delete(Integer id) {
+				find(id);//verifica se o id existe
+				try { //tenta deletar um id, se o id tem atribuos interligados com outras classe ele lança o catch
+				repo.deleteById(id);
+				}
+				catch (DataIntegrityViolationException e) { //mensagem de erro ao tentar excluir uma Cliente que possui pedidos
+					throw new DataIntegrityException("Não é possível excluir porque há entidades relacionadas ");//receber na camada de resouce
+				}
+		}
+			//buscar todas Cliente
+			public List<Cliente> findAll() {
+				return repo.findAll();
+			}
+			
+			//retorna 1 pagina por vez
+			public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+				PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),
+						orderBy);// obj que prepara as informações para fazer a consulta que retorna a pagina de dados
+				return repo.findAll(pageRequest);//findall considera o pagerequest como argumento e retorna a pagina
+			}
+			
+			//instancia uma Cliente apartir de um DTO
+			public Cliente fromDTO(ClienteDTO objDto) {
+				return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
+			}
+			
+			private void updateData(Cliente newObj, Cliente obj) { //atualiza o NewObj com os dados que veio no Obj
+				newObj.setNome(obj.getNome()); //manda o get nome para o set nome do newObj
+				newObj.setEmail(obj.getEmail());//manda o get email para o set email do newObj
+			}
 }

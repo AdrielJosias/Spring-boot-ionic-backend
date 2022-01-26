@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class FieldMessage  implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	//nome do campo e mensagge de erro que ira aparecer no erro
 	private String fieldName;
 	private String message;
 	
@@ -18,7 +19,7 @@ public class FieldMessage  implements Serializable {
 		this.message = message;
 	}
 
-	public String getFieldName() {
+	public String getFieldName() { //get(FieldName) essa palavra que ira aparecer no Json do POSTMAN
 		return fieldName;
 	}
 
