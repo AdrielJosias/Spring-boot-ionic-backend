@@ -36,11 +36,12 @@ public class CategoriaService {
 		return repo.save(obj); 
 		}
 		
-		//metodo de atualizar o repositorio
-		public Categoria update(Categoria obj) {
-			find(obj.getId());//Verifica se o ID é existente, ou se deverá mandar uma eceção
-			return repo.save(obj);
-		}
+	//metodo de atualizar o repositorio
+	public Categoria update(Categoria obj) {
+		Categoria newObj = find(obj.getId());//Instancia um Categoria apartir do banco de dados, Verifica se o ID é existente, ou se deverá mandar uma eceção
+		updateData(newObj, obj);//metodo auxiliar para atualizar o newobj com base no obj que veio com argumento
+		return repo.save(newObj);//salva o newobj atuaizado
+	}
 	
 		//Deleta algo
 		public void delete(Integer id) {
@@ -67,5 +68,9 @@ public class CategoriaService {
 		//instancia uma categoria apartir de um DTO
 		public Categoria fromDTO(CategoriaDTO objDto) {
 			return new Categoria(objDto.getId(), objDto.getNome());
+		}
+		
+		private void updateData(Categoria newObj, Categoria obj) { //atualiza o NewObj com os dados que veio no Obj
+			newObj.setNome(obj.getNome()); //manda o get nome para o set nome do newObj
 		}
 }
