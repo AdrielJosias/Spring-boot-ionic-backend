@@ -1,5 +1,6 @@
 package com.adrieljosias.cursomc.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.adrieljosias.cursomc.domain.Cliente;
 import com.adrieljosias.cursomc.dto.ClienteDTO;
+import com.adrieljosias.cursomc.dto.ClienteNewDTO;
 import com.adrieljosias.cursomc.services.ClienteService;
 
 @RestController 
@@ -32,6 +35,15 @@ public class ClienteResource {
 		Cliente obj = service.find(id);					//RespoceEntity capsula varias informaçoes http para rest
 		return ResponseEntity.ok().body(obj);
 	}	
+	
+	@RequestMapping(method=RequestMethod.POST)//Incerir nova categoria no banco de dados
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) { //resposta http vazia
+		Cliente obj = service.fromDTO(objDto); //converter objDTO para um obj Entity
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(obj.getId()).toUri();//pega a URI no novo recurso que foi incerido e inclui o ID da nova categoria incerida
+		return ResponseEntity.created(uri).build();//gerar o codigo 201 automaticamente, atribuindo o uri 
+	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT)//Atualizar algo 
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDto, @PathVariable Integer id ) { // é uma mistura do GET com o POST
