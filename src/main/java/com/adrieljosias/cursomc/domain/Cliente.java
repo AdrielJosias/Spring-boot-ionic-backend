@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class Cliente implements Serializable {
 	private Integer tipo;
 	
 		//@JsonManagedReference//endpoint serializa os endereços
-		@OneToMany(mappedBy = "cliente") //um pra muitos
+		@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //apagar em cascata
 		private List<Endereco> enderecos = new ArrayList<>();
 	
 		@ElementCollection //Mapeamento
