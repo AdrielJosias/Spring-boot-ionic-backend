@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +28,8 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
+	
+	@Column(unique=true) //faz o banco de dados garantir que não ira ter repetição nesse campo
 	private String email;
 	private String cpfOuCnpj;
 	//Armazenar um numero inteiro ao inves do "TipoCliente"	internamente, porem para o mundo externo vai ser um dado TipoCliente(private TipoCliente tipo;)
