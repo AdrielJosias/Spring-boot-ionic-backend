@@ -18,7 +18,7 @@ import com.adrieljosias.cursomc.resources.exception.FieldMessage;
 public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate, ClienteDTO> {
 
 	@Autowired
-	private HttpServletRequest request;
+	private HttpServletRequest request;//permite ter o parameto da ID
 	@Override
 	public void initialize(ClienteUpdate ann) {
 	}
@@ -27,15 +27,16 @@ public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate
 	@Override
 	public boolean isValid(ClienteDTO objDto, ConstraintValidatorContext context) {
 		
-
+										
+		@SuppressWarnings("unchecked")//estrutura da dedaos, chave e valor ex:clientes/2, os atributos sao armazenanod em um MAP por isso usar esse MAP
 		Map<String, String> map = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-		Integer uriId = Integer.parseInt(map.get("id"));
+		Integer uriId = Integer.parseInt(map.get("id")); //pegar o Id da requisição
 		
 		List<FieldMessage> list = new ArrayList<>();
 
   
 		Cliente aux = repo.findByEmail(objDto.getEmail());
-		if (aux != null && !aux.getId().equals(uriId)) {
+		if (aux != null && !aux.getId().equals(uriId)) { //nao permite a repetição de email ja cadastrado
 			list.add(new FieldMessage("email", "Email já existente"));
 		}
 		// inclua os testes aqui, inserindo erros na lista
