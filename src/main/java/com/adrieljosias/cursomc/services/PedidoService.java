@@ -16,6 +16,8 @@ import com.adrieljosias.cursomc.repositories.PagamentoRepository;
 import com.adrieljosias.cursomc.repositories.PedidoRepository;
 import com.adrieljosias.cursomc.services.exceptions.ObjectNotFoundException;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @Service
 public class PedidoService {
 
@@ -35,6 +37,9 @@ public class PedidoService {
 	@Autowired
 	private ProdutoService produtoService;
 		
+	@Autowired
+	private ClienteService clienteService;
+	
 	//operacao que busca uma categoria por codigo
 	public Pedido find(Integer id) {
 		 Optional<Pedido> obj = repo.findById(id);
@@ -46,6 +51,7 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);//inserindo novo pedido
 		obj.setInstante(new Date());//cria nova data com instante atual
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);//pedido recem add ainda esta pendente
 		obj.getPagamento().setPedido(obj); //o pagamento tem que conhecer o pedido
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {//criar boleto com data de vencimento BoletoService
@@ -56,10 +62,12 @@ public class PedidoService {
 		pagamentoRepository.save(obj.getPagamento());//salvar o pagamento no banco
 		for (ItemPedido ip : obj.getItens()) {//for percorrer a todo os itens de pedido associado ao obj.getitens, salvar os itens de pedido
 			ip.setDesconto(0.0);//desconto 0
-			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPreco());//pegando o preço do produto
+			ip.setProduto(produtoService.find(ip.getProduto().getId()));
+			ip.setPreco(ip.getProduto().getPreco());//pegando o preço do produto
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());//salvar itens no banco
+		System.out.println(obj);
 		return obj;
 	}
 }
