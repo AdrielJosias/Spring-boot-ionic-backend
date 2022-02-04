@@ -16,11 +16,8 @@ import com.adrieljosias.cursomc.repositories.PagamentoRepository;
 import com.adrieljosias.cursomc.repositories.PedidoRepository;
 import com.adrieljosias.cursomc.services.exceptions.ObjectNotFoundException;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-
 @Service
 public class PedidoService {
-
 	//essa classe esta acessando a classe PedidoResource que é Objeto acessa aos dados
 	@Autowired   //Intancia automaticamente
 	private PedidoRepository repo;
@@ -39,6 +36,9 @@ public class PedidoService {
 		
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	//operacao que busca uma categoria por codigo
 	public Pedido find(Integer id) {
@@ -67,7 +67,7 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());//salvar itens no banco
-		System.out.println(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 }
