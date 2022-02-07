@@ -35,6 +35,9 @@ public class Cliente implements Serializable {
 	//Armazenar um numero inteiro ao inves do "TipoCliente"	internamente, porem para o mundo externo vai ser um dado TipoCliente(private TipoCliente tipo;)
 	private Integer tipo;
 	
+	@JsonIgnore
+	private String senha;
+	
 		//@JsonManagedReference//endpoint serializa os endereços
 		@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //apagar em cascata
 		private List<Endereco> enderecos = new ArrayList<>();
@@ -51,12 +54,13 @@ public class Cliente implements Serializable {
 		super();
 	}
 
-		public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+		public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
 			this.id = id;
 			this.nome = nome;
 			this.email = email;
 			this.cpfOuCnpj = cpfOuCnpj;
 			this.tipo = (tipo == null) ? null : tipo.getCod();//Condicional para atribuir null ou cod caso o tipo informado nao seja nulo, Colocar getcod()
+			this.senha = senha;
 		}
 				
 		public Integer getId() {
@@ -99,6 +103,14 @@ public class Cliente implements Serializable {
 			this.tipo = tipo.getCod();//Tambem alterar com o getcod()
 		}
 
+		public String getSenha() {
+			return senha;
+		}
+
+		public void setSenha(String senha) {
+			this.senha = senha;
+		}
+		
 		public List<Endereco> getEnderecos() {
 			return enderecos;
 		}
@@ -139,4 +151,5 @@ public class Cliente implements Serializable {
 			Cliente other = (Cliente) obj;
 			return Objects.equals(id, other.id);
 		}
+
 }
