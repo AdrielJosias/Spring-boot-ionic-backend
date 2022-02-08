@@ -31,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	//caminhos de leitura qe o usuarios podem recuperar os dados
 		private static final String [] PUBLIC_MATCHERS_GET = {
 				"/produtos/**",
-				"/categorias/**"
+				"/categorias/**",
+				"/clientes/**"
 		};
 	
 	@Override
