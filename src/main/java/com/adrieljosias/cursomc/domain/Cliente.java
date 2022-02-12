@@ -41,7 +41,6 @@ public class Cliente implements Serializable {
 	@JsonIgnore
 	private String senha;
 	
-		//@JsonManagedReference//endpoint serializa os endereços
 		@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //apagar em cascata
 		private List<Endereco> enderecos = new ArrayList<>();
 	
